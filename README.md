@@ -1,4 +1,4 @@
-# font-viewer
+# font-viewer (WIP)
 Font Preview in Terminal (Javascript)
 
 ### Motivation
