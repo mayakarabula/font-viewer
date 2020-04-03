@@ -1,0 +1,19 @@
+{
+  "name": "img-viewer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "canvas": "^2.6.1",
+    "font-manager": "^0.3.1",
+    "fs": "^0.0.1-security",
+    "neo-blessed": "^0.2.0",
+    "terminal-kit": "^1.35.2"
+  }
+}
