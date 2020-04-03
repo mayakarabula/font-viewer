@@ -11,4 +11,4 @@ I recently read an article on omgubuntu titled ["Want to Preview Fonts using a T
   * To close and clear search box click `/` again
 
 ### Preview
-![Preview](https://raw.githubusercontent.com/jakubkarabula/font-viewer/master/screenshots/Screenshot%202020-04-03%20at%2023.01.14.png)
+![Preview](/screenshots/Apr-03-2020%2023-22-25.gif)
