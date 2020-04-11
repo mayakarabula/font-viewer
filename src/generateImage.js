@@ -9,17 +9,17 @@ const generateImage = (font, text, cb) => {
     const size = (COLUMNS * 0.4 | 0) * 10
     var img = createCanvas(size, size)
     var ctx = img.getContext('2d');
-    
+
     ctx.fillStyle = '#111'
     ctx.fillRect(0, 0, size, size)
     ctx.fillStyle = '#fff'
     ctx.textAlign = "center"
 
-    let fontSize = size / 30 
+    let fontSize = size / 30
     fontSize = fontSize < 20 ? 20 : fontSize
-  
+
     ctx.font = `${fontSize}pt '${font.family}'`
-    
+
     const lines = text.split('\n')
     const fontSpacing = fontSize * 2.5
     const middlePos = size/2|0
@@ -32,11 +32,12 @@ const generateImage = (font, text, cb) => {
         topStart + (index * fontSpacing)
       )
     )
-    
-    const out = fs.createWriteStream(__dirname + '/out.png')
+
+    const out = fs.createWriteStream('out.png')
     const stream = img.createPNGStream()
     stream.pipe(out)
     out.on('finish', () => cb())
 }
 
 exports.generateImage = generateImage
+

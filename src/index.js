@@ -1,69 +1,49 @@
-const fontManager = require('font-manager')
 const fs = require('fs')
-const blessed = require('neo-blessed')
 const spawn = require('child_process').spawn
-const term = require( 'terminal-kit' ).terminal
+const termkit = require( 'terminal-kit' )
+const clipboardy = require('clipboardy')
 const { generateImage } = require('./generateImage')
-
-var screen = blessed.screen({
-  smartCSR: true
-})
-
-const fonts = fontManager
-  .getAvailableFontsSync()
-  .sort((a, b) => {
-    if (a.family > b.family) {
-      return 1
-    } else if (b.family > a.family) {
-      return -1
-    }
-    return 0
-  })
-
-const formatName = (font) => (font.family + ' - ' + font.style)
-
-const leftPane = blessed.box({
-  top: 'center',
-  left: '5%',
-  width: '40%',
-  height: '90%',
-  border: {
-    type: 'line'
-  }
-})
-
-var list = blessed.list({
-  top: 0,
-  left: 0,
-  border: {
-    // type: 'line'
-  },
-  style: {
-    selected: {
-      bg: '#f0f0f0',
-      fg: '#333'
-    }
-  },
-  items: fonts.map(formatName),
-  interactive: true,
-  // vi: true,
-  mouse: true,
-  keys: true
-});
-
-const searchText = blessed.text({
-  top: 0,
-  right: 0,
-  content: '',
-  style: {
-    // bg: '#000',
-    // fg: '#fff'
-  }
-})
+const { fonts, formatName } = require('./fontsList')
+const { screen, searchText, list } = require('./ui')
 
 let searchPhrase = ''
 let searching = false
 let filtered = fonts
+let selected = null
+
+var term = termkit.terminal
+
+// term.clear() ;
+
+// var document = term.createDocument() ;
+
+// var selectList = new termkit.SelectList( {
+// 	parent: document ,
+// 	x: 10 ,
+// 	y: 10 ,
+// 	//buttonSpacing: 3 ,
+// 	//justify: true ,
+// 	//width: 50 ,
+// 	content: 'list' ,
+// 	value: 'list value' ,
+// 	//value: 'done' ,
+// 	master: { content: 'Select' } ,
+// 	items: [
+// 		{
+// 			content: 'Todo' ,
+// 			value: 'todo'
+// 		} ,
+// 		{
+// 			content: 'In Progress' ,
+// 			value: 'in-progress'
+// 		} ,
+// 		{
+// 			content: 'Done' ,
+// 			value: 'done'
+// 		}
+// 	]
+// } ) ;
+//
 
 const searchInList = () => {
   let index = 0
@@ -71,7 +51,7 @@ const searchInList = () => {
 
   filtered = fonts.filter(
     (font) => phrase.test(formatName(font))
-  ) 
+  )
 
   list.setItems(filtered.map(formatName))
   screen.render()
@@ -95,36 +75,33 @@ process.stdin.on('keypress', (str, event) => {
       searchText.content = 'search: ' + searchPhrase
       screen.render()
     }
-    
+
     searchInList()
   } else {
     if (key === '/') {
       searching = true
-      searchText.content = 'search: ' 
+      searchText.content = 'search: '
       screen.render()
     }
   }
 
   if (!searching && key === 'y') {
-
+    if (selected) {
+      clipboardy.writeSync(filtered[selected].family)
+    }
   }
 })
 
 list.on('select', function(el, selectedIndex) {
+  selected = selectedIndex
   printFont(selectedIndex)
 })
-
-// Append our box to the screen.
-screen.append(leftPane)
-
-leftPane.append(list)
-leftPane.append(searchText)
 
 const printFont = (fontIndex) => {
   const font = filtered[fontIndex]
   const COLUMNS = process.stdout.columns
   const margin = COLUMNS * 0.65 | 0
-  
+
   const text = `The quick brown fox
 jumps over the lazy dog
 1 2 3 4 5 6 7 8 9 0
@@ -139,6 +116,9 @@ jumps over the lazy dog
     ls.stdout.on('data', (data) => {
       s += data.toString()
     })
+	ls.stderr.on('data', (error) => {
+		console.log({ error: error.toString() })
+	})
     ls.on('close', (code) => {
       if (code === 0) {
         term.moveTo(margin, 10)
@@ -156,3 +136,4 @@ screen.key(['escape', 'q', 'C-c'], function(ch, key) {
 list.focus()
 
 screen.render()
+
