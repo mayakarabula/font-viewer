@@ -1,7 +1,7 @@
 const fs = require('fs')
 const { createCanvas, registerFont } = require('canvas')
 
-const generateImage = (font, text, cb) => {
+const generateImage = (font, text, path, cb) => {
   const COLUMNS = process.stdout.columns
   const margin = COLUMNS * 0.65 | 0
 
@@ -33,7 +33,7 @@ const generateImage = (font, text, cb) => {
       )
     )
 
-    const out = fs.createWriteStream('out.png')
+    const out = fs.createWriteStream(path)
     const stream = img.createPNGStream()
     stream.pipe(out)
     out.on('finish', () => cb())

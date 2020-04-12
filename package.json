@@ -38,6 +38,7 @@
     "express": "^4.17.1",
     "font-manager": "^0.3.1",
     "fs": "^0.0.1-security",
+    "md5": "^2.2.1",
     "path": "^0.12.7",
     "terminal-kit": "^1.35.2"
   }

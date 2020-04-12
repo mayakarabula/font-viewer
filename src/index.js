@@ -2,6 +2,8 @@ const fs = require('fs')
 const spawn = require('child_process').spawn
 const termkit = require( 'terminal-kit' )
 const clipboardy = require('clipboardy')
+const md5 = require('md5')
+
 const { generateImage } = require('./generateImage')
 const { fonts, formatName } = require('./fontsList')
 const { screen, searchText, list } = require('./ui')
@@ -13,37 +15,9 @@ let selected = null
 
 var term = termkit.terminal
 
-// term.clear() ;
-
-// var document = term.createDocument() ;
-
-// var selectList = new termkit.SelectList( {
-// 	parent: document ,
-// 	x: 10 ,
-// 	y: 10 ,
-// 	//buttonSpacing: 3 ,
-// 	//justify: true ,
-// 	//width: 50 ,
-// 	content: 'list' ,
-// 	value: 'list value' ,
-// 	//value: 'done' ,
-// 	master: { content: 'Select' } ,
-// 	items: [
-// 		{
-// 			content: 'Todo' ,
-// 			value: 'todo'
-// 		} ,
-// 		{
-// 			content: 'In Progress' ,
-// 			value: 'in-progress'
-// 		} ,
-// 		{
-// 			content: 'Done' ,
-// 			value: 'done'
-// 		}
-// 	]
-// } ) ;
-//
+if (!fs.existsSync('./previews')){
+    fs.mkdirSync('previews')
+}
 
 const searchInList = () => {
   let index = 0
@@ -99,33 +73,48 @@ list.on('select', function(el, selectedIndex) {
 
 const printFont = (fontIndex) => {
   const font = filtered[fontIndex]
-  const COLUMNS = process.stdout.columns
-  const margin = COLUMNS * 0.65 | 0
-
+  
   const text = `The quick brown fox
 jumps over the lazy dog
 1 2 3 4 5 6 7 8 9 0
 ! @ # $ % ^ & * ( )`
 // \uE0A0 \uE0A2 \uE0B0`
 
-  generateImage(font, text, () => {
-    const ls = spawn('imgcat', ['out.png'])
+  const hash = md5(font.family + font.style + text)
+  const path = `./previews/${hash}.png` 
+  
+  try {
+    if (fs.existsSync(path)) {
+      readFile(path)
+    } else {
+      generateImage(font, text, path, () => readFile(path))
+    }
+  } catch(err) {
+  }
+}
 
-    let s = ''
+const readFile = (path) => {
+  const COLUMNS = process.stdout.columns
+  const margin = COLUMNS * 0.65 | 0
 
-    ls.stdout.on('data', (data) => {
-      s += data.toString()
-    })
-	ls.stderr.on('data', (error) => {
-		console.log({ error: error.toString() })
-	})
-    ls.on('close', (code) => {
-      if (code === 0) {
-        term.moveTo(margin, 10)
-        term(s)
-      }
-      list.focus()
-    })
+  const ls = spawn('imgcat', [path])
+
+  let output = ''
+
+  ls.stdout.on('data', (data) => {
+    output += data.toString()
+  })
+  
+  ls.stderr.on('data', (error) => {
+    console.log({ error: error.toString() })
+  })
+
+  ls.on('close', (code) => {
+    if (code === 0) {
+      term.moveTo(margin, 10)
+      term(output)
+    }
+    list.focus()
   })
 }
 
