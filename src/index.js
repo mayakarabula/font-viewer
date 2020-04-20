@@ -1,19 +1,23 @@
-const fs = require('fs')
-const spawn = require('child_process').spawn
-const termkit = require( 'terminal-kit' )
-const clipboardy = require('clipboardy')
-const md5 = require('md5')
-
-const { generateImage } = require('./generateImage')
-const { fonts, formatName } = require('./fontsList')
-const { screen, searchText, list } = require('./ui')
+import fs from 'fs'
+import { spawn } from 'child_process'
+import md5 from 'md5'
+import clipboardy from 'clipboardy'
+import { 
+  generateImage,
+  printImage
+} from './image'
+import { fonts } from './fontsList'
+import { 
+  formatFontName,
+  getImageSize
+} from './utils'
+import { screen, searchText, list } from './ui'
+import { text } from './constants'
 
 let searchPhrase = ''
 let searching = false
 let filtered = fonts
 let selected = null
-
-var term = termkit.terminal
 
 if (!fs.existsSync('./previews')){
     fs.mkdirSync('previews')
@@ -24,10 +28,10 @@ const searchInList = () => {
   const phrase = new RegExp(searchPhrase, 'i')
 
   filtered = fonts.filter(
-    (font) => phrase.test(formatName(font))
+    (font) => phrase.test(formatFontName(font))
   )
 
-  list.setItems(filtered.map(formatName))
+  list.setItems(filtered.map(formatFontName))
   screen.render()
 }
 
@@ -73,49 +77,18 @@ list.on('select', function(el, selectedIndex) {
 
 const printFont = (fontIndex) => {
   const font = filtered[fontIndex]
-  
-  const text = `The quick brown fox
-jumps over the lazy dog
-1 2 3 4 5 6 7 8 9 0
-! @ # $ % ^ & * ( )`
-// \uE0A0 \uE0A2 \uE0B0`
-
-  const hash = md5(font.family + font.style + text)
+  const hash = md5(font.family + font.style + text + getImageSize())
   const path = `./previews/${hash}.png` 
   
   try {
     if (fs.existsSync(path)) {
-      readFile(path)
+      printImage(path)
     } else {
-      generateImage(font, text, path, () => readFile(path))
+      generateImage(font, text, path, () => printImage(path))
     }
   } catch(err) {
+    console.log({ err })
   }
-}
-
-const readFile = (path) => {
-  const COLUMNS = process.stdout.columns
-  const margin = COLUMNS * 0.65 | 0
-
-  const ls = spawn('imgcat', [path])
-
-  let output = ''
-
-  ls.stdout.on('data', (data) => {
-    output += data.toString()
-  })
-  
-  ls.stderr.on('data', (error) => {
-    console.log({ error: error.toString() })
-  })
-
-  ls.on('close', (code) => {
-    if (code === 0) {
-      term.moveTo(margin, 10)
-      term(output)
-    }
-    list.focus()
-  })
 }
 
 screen.key(['escape', 'q', 'C-c'], function(ch, key) {
