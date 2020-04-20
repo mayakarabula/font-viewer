@@ -37,6 +37,14 @@ export const searchText = blessed.text({
   content: ''
 })
 
+const instructions = blessed.text({
+  bottom: 1,
+  left: 1,
+  content: 'Use arrows to browse the list. Use return to select a font. Use / to search.'
+})
+
+screen.append(instructions)
+
 // Append our box to the screen.
 screen.append(leftPane)
 
