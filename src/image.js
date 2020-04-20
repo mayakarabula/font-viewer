@@ -29,7 +29,7 @@ const createImageCanvas = (text, font) => {
   const img = createCanvas(size, size)
   const ctx = img.getContext('2d');
 
-  ctx.fillStyle = '#111'
+  ctx.fillStyle = '#282A36'
   ctx.fillRect(0, 0, size, size)
   ctx.fillStyle = '#fff'
   ctx.textAlign = "center"

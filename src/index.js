@@ -1,5 +1,4 @@
 import fs from 'fs'
-import { spawn } from 'child_process'
 import md5 from 'md5'
 import clipboardy from 'clipboardy'
 import { 
