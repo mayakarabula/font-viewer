@@ -1,7 +1,6 @@
 import fontManager from 'font-manager'
-import formatFontName from './utils'
 
-const sortByFontFamily = (fonts) =>
+const sortByFontFamily = () =>
   (a, b) => {
     if (a.family > b.family) {
       return 1

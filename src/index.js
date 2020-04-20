@@ -23,7 +23,6 @@ if (!fs.existsSync('./previews')){
 }
 
 const searchInList = () => {
-  let index = 0
   const phrase = new RegExp(searchPhrase, 'i')
 
   filtered = fonts.filter(
@@ -90,7 +89,7 @@ const printFont = (fontIndex) => {
   }
 }
 
-screen.key(['escape', 'q', 'C-c'], function(ch, key) {
+screen.key(['escape', 'q', 'C-c'], function() {
   return process.exit(0);
 })
 

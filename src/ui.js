@@ -1,4 +1,4 @@
-const blessed = require('blessed')
+import blessed from 'blessed'
 import { fonts } from './fontsList'
 import { formatFontName } from './utils'
 

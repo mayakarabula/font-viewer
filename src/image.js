@@ -3,7 +3,6 @@ import { createCanvas, registerFont } from 'canvas'
 import { spawn } from 'child_process'
 import termkit from 'terminal-kit'
 import { 
-  getColumnWidth,
   getImageSize,
   getImageMargin,
   getImagePreviewProcess
