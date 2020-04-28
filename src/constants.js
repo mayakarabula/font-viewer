@@ -1,8 +1,8 @@
 export const IMAGE_WIDTH_PERCENTAGE = 0.4
 
-export const IMAGE_WIDTH_SCALE = 10
+export const IMAGE_WIDTH_SCALE = 6.5
 
-export const IMAGE_MARGIN_PERCENTAGE = 0.65
+export const IMAGE_MARGIN_PERCENTAGE = 0.55
 
 export const IMAGE_MARGIN_TOP = 10
 

@@ -33,8 +33,8 @@ const createImageCanvas = (text, font) => {
   ctx.fillStyle = '#fff'
   ctx.textAlign = "center"
 
-  let fontSize = size / 30 | 0
-  fontSize = fontSize < 20 ? 20 : fontSize
+  let fontSize = size / 40 | 0
+  fontSize = fontSize < 15 ? 15 : fontSize
   ctx.font = `${fontSize}pt '${font.family}'`
 
   putText(text, fontSize, ctx)
