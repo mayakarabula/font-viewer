@@ -40,7 +40,7 @@ export const searchText = blessed.text({
 const instructions = blessed.text({
   bottom: 1,
   left: 1,
-  content: 'Use arrows to browse the list. Use return to select a font. Use / to search.'
+  content: 'Use arrows to browse the list. Use return to select a font. Use / to search. Use q to exit.'
 })
 
 screen.append(instructions)

@@ -5,7 +5,7 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 
 module.exports = {
-	entry: ["./src/index"],
+    entry: ["./src/index"],
     target: "node",
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -33,9 +33,5 @@ module.exports = {
     optimization: {
       namedModules: true,
       noEmitOnErrors: true,
-    },
-    output: {
-      path: path.join(__dirname, "dist"),
-      filename: "main.js"
     }
 };
