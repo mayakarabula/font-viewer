@@ -9,12 +9,16 @@ I recently read an article on omgubuntu titled ["Want to Preview Fonts using a T
 * `yarn build` to build the project
 * `yarn start` to start the project
 * `yarn lint` to test code style
+* `yarn test` to run tests
 
 ### Scope
 * Listing all installed fonts, move through items with *arrow keys*
 * Upon clicking `return` the selected font from the list will be presented on the right side of the terminal
 * Upon clicking `/` search box will appear in the top right corner of the list, then user can input name of the font and the list will be filtered accordingly
   * To close and clear search box click `/` again
+* Upon clicking `q` application will exit
+
+To generate preview by default application is using `imgcat` to use different tool you can pass environment variable `IMAGE_PREVIEW_PROCESS`
 
 ### Preview
 ![Preview](/screenshots/2020-04-20.gif)
